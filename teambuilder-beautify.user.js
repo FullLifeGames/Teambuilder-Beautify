@@ -229,14 +229,6 @@
   }
 
   // ============================================================
-  // Type icon URL from Showdown
-  // ============================================================
-
-  function getTypeIconURL(type) {
-    return 'https://play.pokemonshowdown.com/sprites/types/' + type + '.png';
-  }
-
-  // ============================================================
   // CSS Styles
   // ============================================================
 
@@ -379,16 +371,29 @@
     }
     .tb-card-header-types {
       display: flex;
-      gap: 4px;
+      gap: 5px;
       flex-shrink: 0;
     }
-    .tb-card-header-types img { height: 18px; }
+    .tb-type-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+      line-height: 1.4;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
 
     /* Card body — two columns */
     .tb-card-body {
       display: flex;
       padding: 16px 18px 18px;
       gap: 16px;
+      min-height: 200px;
     }
 
     /* Sprite column */
@@ -453,16 +458,16 @@
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
     }
 
     /* Info rows */
     .tb-card-info-table {
       display: grid;
       grid-template-columns: auto 1fr;
-      gap: 4px 12px;
-      align-items: center;
-      margin-bottom: 10px;
+      gap: 3px 12px;
+      align-items: baseline;
+      margin-bottom: auto;
+      padding-bottom: 10px;
     }
     .tb-card-label {
       color: rgba(255,255,255,0.35);
@@ -487,20 +492,25 @@
     .tb-tera-badge {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
-      padding: 2px 10px 2px 3px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 5px;
+      font-size: 11px;
+      font-weight: 800;
       color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      border: 1px solid rgba(255,255,255,0.15);
     }
-    .tb-tera-badge img { height: 15px; }
 
     /* EVs/IVs */
     .tb-card-evs {
-      font-size: 11.5px;
+      font-size: 11px;
       color: rgba(255,255,255,0.55);
       font-weight: 500;
+      white-space: normal;
+      word-break: break-word;
+      line-height: 1.4;
     }
 
     /* Moves grid */
@@ -628,9 +638,10 @@
     // Sprite style from Dex (CSS background properties)
     const spriteStyle = getSpriteStyle(set);
 
-    // Type icons HTML
+    // Type badges as CSS text (not pixelated images)
     const typeIconsHTML = types.map(function(t) {
-      return '<img src="' + getTypeIconURL(t) + '" alt="' + t + '" title="' + t + '">';
+      var tc = getTypeColor(t);
+      return '<span class="tb-type-badge" style="background: ' + tc.bg + ';">' + escapeHTML(t) + '</span>';
     }).join('');
 
     // Moves HTML — all use white text
@@ -652,12 +663,12 @@
       }
     }
 
-    // Tera badge
+    // Tera badge as CSS text
     let teraBadgeHTML = '';
     if (teraType) {
       const teraColor = getTypeColor(teraType);
       teraBadgeHTML = '<span class="tb-tera-badge" style="background: ' + teraColor.bg + ';">' +
-        '<img src="' + getTypeIconURL(teraType) + '" alt="' + escapeHTML(teraType) + '"> ' + escapeHTML(teraType) +
+        escapeHTML(teraType) +
       '</span>';
     }
 
