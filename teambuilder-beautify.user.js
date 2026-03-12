@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pokémon Showdown Teambuilder Beautify
 // @namespace    https://github.com/teambuilder-beautify
-// @version      1.0.0
+// @version      1.0.1
 // @description  Adds a beautiful teamsheet overlay to the Pokémon Showdown teambuilder
 // @author       Teambuilder Beautify
 // @match        https://play.pokemonshowdown.com/*
