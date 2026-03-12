@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Pokémon Showdown Teambuilder Beautify",
+  "version": "1.0.0",
+  "description": "Adds a beautiful teamsheet overlay to the Pokémon Showdown teambuilder",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://play.pokemonshowdown.com/*",
+        "http://play.pokemonshowdown.com/*",
+        "https://pokemonshowdown.com/*",
+        "http://pokemonshowdown.com/*",
+        "http://*.psim.us/*",
+        "https://*.psim.us/*"
+      ],
+      "js": [
+        "teambuilder-beautify.js"
+      ],
+      "run_at": "document_idle",
+      "world": "MAIN"
+    }
+  ],
+  "icons": {
+    "48": "icon48.png",
+    "128": "icon128.png"
+  }
+}
