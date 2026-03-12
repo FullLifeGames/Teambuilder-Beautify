@@ -1,0 +1,44 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [master, main]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Chrome extension
+        run: node build.js
+
+      - name: Package Chrome extension
+        run: cd chrome-extension && zip -r ../chrome-extension.zip .
+
+      - name: Read version from userscript
+        id: version
+        run: echo "version=$(grep -oP '@version\s+\K\S+' teambuilder-beautify.user.js)" >> $GITHUB_OUTPUT
+
+      - name: Create or update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: v${{ steps.version.outputs.version }}
+          body: |
+            **Tampermonkey:** Download `teambuilder-beautify.user.js` and install with Tampermonkey.
+            **Chrome:** Download `chrome-extension.zip`, unzip, and load as unpacked extension (`chrome://extensions`).
+          files: |
+            teambuilder-beautify.user.js
+            chrome-extension.zip
+          make_latest: true

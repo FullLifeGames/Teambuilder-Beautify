@@ -2,6 +2,12 @@
 
 A userscript / Chrome extension that adds a beautiful teamsheet overlay to the [Pokemon Showdown](https://play.pokemonshowdown.com/) teambuilder.
 
+## Screenshots
+
+![Team Overview](images/team-overview.png)
+
+![Detail View](images/individual.gif)
+
 ## Features
 
 - Dark-themed teamsheet overlay with styled cards for each Pokemon
@@ -50,6 +56,15 @@ chrome-extension/
   manifest.json                 # Chrome MV3 manifest
   teambuilder-beautify.js       # Generated from build.js (do not edit directly)
 ```
+
+## Releases
+
+Releases are built automatically via GitHub Actions on every push to `master`. Each release includes:
+
+- `teambuilder-beautify.user.js` — ready to install in Tampermonkey
+- `chrome-extension.zip` — ready to unzip and load as an unpacked Chrome extension
+
+Download the latest release from the [Releases page](../../releases).
 
 ## Development
 

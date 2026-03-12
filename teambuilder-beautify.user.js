@@ -265,8 +265,9 @@
       background: #1a1d2e;
       border-radius: 20px;
       padding: 32px;
-      max-width: 1300px;
-      width: 96vw;
+      box-sizing: border-box;
+      max-width: 1364px;
+      width: 92vw;
       max-height: 94vh;
       overflow-y: auto;
       box-shadow: 0 30px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.06);
@@ -920,6 +921,26 @@
   // Show Teamsheet
   // ============================================================
 
+  // ============================================================
+  // Zoom compensation — counter browser zoom so overlay renders at 1:1
+  // ============================================================
+
+  function applyViewportFit(overlay) {
+    var modal = overlay.querySelector('.tb-beautify-modal');
+    if (!modal) return;
+    // Smoothly scale down when viewport is smaller than the ideal modal width.
+    // At 1400px+ viewport: no scaling (full size).
+    // Below 1400px: linearly scale from 1.0 down to 0.7 at 600px.
+    var vw = window.innerWidth;
+    if (vw < 1400) {
+      var scale = 0.7 + 0.3 * Math.min(1, (vw - 600) / 800);
+      scale = Math.max(0.6, Math.min(1, scale));
+      modal.style.zoom = scale.toFixed(4);
+    } else {
+      modal.style.zoom = '';
+    }
+  }
+
   function showTeamsheet() {
     var sets = getCurrentTeamSets();
     if (!sets || sets.length === 0) {
@@ -977,6 +998,12 @@
 
     overlay._keyHandler = function(e) { if (e.key === 'Escape') closeTeamsheet(); };
     document.addEventListener('keydown', overlay._keyHandler);
+
+    // Apply zoom compensation before adding to DOM
+    applyViewportFit(overlay);
+    overlay._resizeHandler = function() { applyViewportFit(overlay); };
+    window.addEventListener('resize', overlay._resizeHandler);
+
     document.body.appendChild(overlay);
   }
 
@@ -984,6 +1011,7 @@
     var overlay = document.querySelector('.tb-beautify-overlay');
     if (overlay) {
       if (overlay._keyHandler) document.removeEventListener('keydown', overlay._keyHandler);
+      if (overlay._resizeHandler) window.removeEventListener('resize', overlay._resizeHandler);
       overlay.remove();
     }
     _currentSets = null;
