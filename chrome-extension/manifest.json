@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Pokémon Showdown Teambuilder Beautify",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Adds a beautiful teamsheet overlay to the Pokémon Showdown teambuilder",
   "content_scripts": [
     {

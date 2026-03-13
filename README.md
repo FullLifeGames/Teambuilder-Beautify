@@ -15,6 +15,7 @@ A userscript / Chrome extension that adds a beautiful teamsheet overlay to the [
 - Type badges, item icons, and ability/nature/EV info
 - Computed stat bars (base + IV + EV + nature) with nature highlighting (red = boosted, blue = reduced)
 - Detail view: click any Pokemon card for a full breakdown with large sprite, stat bars, and move details
+- **Open Teamsheet** toggle: switch to a simplified view that hides natures, EVs, IVs, and stat bars — perfect for sharing without revealing competitive details
 - Copy as image / close controls
 - Works with all team formats and generations
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Pokémon Showdown Teambuilder Beautify
 // @namespace    https://github.com/teambuilder-beautify
-// @version      1.0.1
+// @version      1.0.2
 // @description  Adds a beautiful teamsheet overlay to the Pokémon Showdown teambuilder
 // @author       Teambuilder Beautify
 // @match        https://play.pokemonshowdown.com/*
@@ -305,6 +305,47 @@
       transition: all 0.2s;
     }
     .tb-beautify-close:hover { background: rgba(255,255,255,0.12); color: #fff; }
+
+    /* Open Teamsheet Toggle */
+    .tb-open-teamsheet-toggle {
+      display: flex; align-items: center; gap: 10px;
+      margin-left: 24px; margin-right: auto;
+      user-select: none;
+    }
+    .tb-open-teamsheet-toggle label {
+      color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500;
+      cursor: pointer; white-space: nowrap;
+    }
+    .tb-toggle-switch {
+      position: relative; width: 40px; height: 22px; flex-shrink: 0;
+    }
+    .tb-toggle-switch input { opacity: 0; width: 0; height: 0; position: absolute; pointer-events: none; }
+    .tb-toggle-slider {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255,255,255,0.1); border-radius: 11px;
+      cursor: pointer; transition: background 0.25s;
+      z-index: 1;
+    }
+    .tb-toggle-slider::before {
+      content: ''; position: absolute; left: 3px; top: 3px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(255,255,255,0.5); transition: transform 0.25s, background 0.25s;
+    }
+    .tb-toggle-switch input:checked + .tb-toggle-slider {
+      background: rgba(124,77,255,0.5);
+    }
+    .tb-toggle-switch input:checked + .tb-toggle-slider::before {
+      transform: translateX(18px); background: #7c4dff;
+    }
+
+    /* Open Teamsheet mode: hide nature/evs/ivs */
+    .tb-beautify-modal.tb-open-teamsheet .tb-card-nature,
+    .tb-beautify-modal.tb-open-teamsheet .tb-card-evs-row,
+    .tb-beautify-modal.tb-open-teamsheet .tb-card-ivs-row,
+    .tb-beautify-modal.tb-open-teamsheet .tb-detail-nature,
+    .tb-beautify-modal.tb-open-teamsheet .tb-detail-evs-row,
+    .tb-beautify-modal.tb-open-teamsheet .tb-detail-ivs-row { display: none !important; }
+    .tb-beautify-modal.tb-open-teamsheet .tb-detail-stats { display: none !important; }
 
     /* Grid */
     .tb-beautify-grid {
@@ -666,10 +707,10 @@
               '<span class="tb-card-label">Ability</span>' +
               '<span class="tb-card-value">' + escapeHTML(abilityName) + '</span>' +
               (teraType ? '<span class="tb-card-label">Tera</span><span class="tb-card-value">' + teraBadgeHTML + '</span>' : '') +
-              '<span class="tb-card-label">Nature</span>' +
-              '<span class="tb-card-value">' + escapeHTML(natureName) + '</span>' +
-              (evStr ? '<span class="tb-card-label">EVs</span><span class="tb-card-evs">' + escapeHTML(evStr) + '</span>' : '') +
-              (ivStr ? '<span class="tb-card-label">IVs</span><span class="tb-card-evs">' + escapeHTML(ivStr) + '</span>' : '') +
+              '<span class="tb-card-label tb-card-nature">Nature</span>' +
+              '<span class="tb-card-value tb-card-nature">' + escapeHTML(natureName) + '</span>' +
+              (evStr ? '<span class="tb-card-label tb-card-evs-row">EVs</span><span class="tb-card-evs tb-card-evs-row">' + escapeHTML(evStr) + '</span>' : '') +
+              (ivStr ? '<span class="tb-card-label tb-card-ivs-row">IVs</span><span class="tb-card-evs tb-card-ivs-row">' + escapeHTML(ivStr) + '</span>' : '') +
             '</div>' +
             '<div class="tb-card-moves">' + movesHTML + '</div>' +
           '</div>' +
@@ -857,10 +898,10 @@
                 '<span class="tb-detail-label">Ability</span>' +
                 '<span class="tb-detail-value">' + escapeHTML(abilityName) + '</span>' +
                 (teraType ? '<span class="tb-detail-label">Tera</span><span class="tb-detail-value">' + teraHTML + '</span>' : '') +
-                '<span class="tb-detail-label">Nature</span>' +
-                '<span class="tb-detail-value">' + escapeHTML(natureName) + '</span>' +
-                (evStr ? '<span class="tb-detail-label">EVs</span><span class="tb-detail-value-sm">' + escapeHTML(evStr) + '</span>' : '') +
-                (ivStr ? '<span class="tb-detail-label">IVs</span><span class="tb-detail-value-sm">' + escapeHTML(ivStr) + '</span>' : '') +
+                '<span class="tb-detail-label tb-detail-nature">Nature</span>' +
+                '<span class="tb-detail-value tb-detail-nature">' + escapeHTML(natureName) + '</span>' +
+                (evStr ? '<span class="tb-detail-label tb-detail-evs-row">EVs</span><span class="tb-detail-value-sm tb-detail-evs-row">' + escapeHTML(evStr) + '</span>' : '') +
+                (ivStr ? '<span class="tb-detail-label tb-detail-ivs-row">IVs</span><span class="tb-detail-value-sm tb-detail-ivs-row">' + escapeHTML(ivStr) + '</span>' : '') +
               '</div>' +
             '</div>' +
           '</div>' +
@@ -966,6 +1007,13 @@
             '<h2>' + escapeHTML(teamName) + '</h2>' +
             (format ? '<div class="tb-beautify-header-format">' + escapeHTML(format) + '</div>' : '') +
           '</div>' +
+          '<div class="tb-open-teamsheet-toggle">' +
+            '<label for="tb-open-teamsheet-cb">Open Teamsheet</label>' +
+            '<div class="tb-toggle-switch">' +
+              '<input type="checkbox" id="tb-open-teamsheet-cb">' +
+              '<span class="tb-toggle-slider"></span>' +
+            '</div>' +
+          '</div>' +
           '<a class="tb-beautify-credit" href="https://fulllifegames.com" target="_blank" rel="noopener">Created by Bene</a>' +
           '<button class="tb-beautify-close" title="Close">&times;</button>' +
         '</div>' +
@@ -987,6 +1035,23 @@
 
     var closeBtn = overlay.querySelector('[data-action="close"]');
     if (closeBtn) closeBtn.addEventListener('click', closeTeamsheet);
+
+    // Open Teamsheet toggle
+    var openTsCb = overlay.querySelector('#tb-open-teamsheet-cb');
+    var openTsSlider = overlay.querySelector('.tb-toggle-slider');
+    if (openTsCb) {
+      var applyToggle = function() {
+        var modal = overlay.querySelector('.tb-beautify-modal');
+        if (openTsCb.checked) modal.classList.add('tb-open-teamsheet');
+        else modal.classList.remove('tb-open-teamsheet');
+      };
+      openTsCb.addEventListener('change', applyToggle);
+      if (openTsSlider) openTsSlider.addEventListener('click', function(e) {
+        e.preventDefault();
+        openTsCb.checked = !openTsCb.checked;
+        applyToggle();
+      });
+    }
 
     // Card click -> detail view
     overlay.querySelectorAll('.tb-card').forEach(function(card) {
@@ -1034,8 +1099,15 @@
 
   async function exportTeamsheetAsImage(modalEl) {
     try {
+      // Hide toggle and close button during export
+      var toggle = modalEl.querySelector('.tb-open-teamsheet-toggle');
+      var closeEl = modalEl.querySelector('.tb-beautify-close');
+      if (toggle) toggle.style.display = 'none';
+      if (closeEl) closeEl.style.display = 'none';
       var h2c = await loadHtml2Canvas();
       var canvas = await h2c(modalEl, { backgroundColor: '#1a1d2e', scale: 2, useCORS: true });
+      if (toggle) toggle.style.display = '';
+      if (closeEl) closeEl.style.display = '';
       canvas.toBlob(function(blob) {
         if (blob && navigator.clipboard && navigator.clipboard.write) {
           navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]).then(function() {
